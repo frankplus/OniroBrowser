@@ -34,31 +34,6 @@ export struct SettingsView {
     }
   }
 
-  @Builder
-  sectionTitle(title: string) {
-    Text(title)
-      .fontSize(12)
-      .fontWeight(FontWeight.Medium)
-      .fontColor(Theme.of(this.isDark).textDim)
-      .width('100%')
-      .padding({ left: 4, top: 18, bottom: 8 })
-  }
-
-  @Builder
-  actionRow(title: string, tint: string, action: () => void) {
-    Row() {
-      Text(title)
-        .fontSize(15)
-        .fontColor(tint)
-        .layoutWeight(1)
-    }
-    .width('100%')
-    .padding({ left: 14, right: 14, top: 13, bottom: 13 })
-    .onClick(() => {
-      action();
-    })
-  }
-
   build() {
     Column() {
       OverlayHeader({
@@ -70,7 +45,12 @@ export struct SettingsView {
 
       Scroll() {
         Column() {
-          this.sectionTitle('Search engine')
+          Text('Search engine')
+            .fontSize(12)
+            .fontWeight(FontWeight.Medium)
+            .fontColor(Theme.of(this.isDark).textDim)
+            .width('100%')
+            .padding({ left: 4, top: 18, bottom: 8 })
           Column() {
             ForEach(SEARCH_ENGINES, (engine: SearchEngine, index: number) => {
               Row() {
@@ -96,7 +76,12 @@ export struct SettingsView {
           .backgroundColor(Theme.of(this.isDark).surface)
           .borderRadius(14)
 
-          this.sectionTitle('Appearance')
+          Text('Appearance')
+            .fontSize(12)
+            .fontWeight(FontWeight.Medium)
+            .fontColor(Theme.of(this.isDark).textDim)
+            .width('100%')
+            .padding({ left: 4, top: 18, bottom: 8 })
           Column() {
             Row() {
               Text('Theme')
@@ -149,7 +134,12 @@ export struct SettingsView {
           .backgroundColor(Theme.of(this.isDark).surface)
           .borderRadius(14)
 
-          this.sectionTitle('Browsing')
+          Text('Browsing')
+            .fontSize(12)
+            .fontWeight(FontWeight.Medium)
+            .fontColor(Theme.of(this.isDark).textDim)
+            .width('100%')
+            .padding({ left: 4, top: 18, bottom: 8 })
           Column() {
             // Written out inline: a @Builder taking the value would keep
             // showing the switch position captured at first build.
@@ -278,14 +268,35 @@ export struct SettingsView {
           .backgroundColor(Theme.of(this.isDark).surface)
           .borderRadius(14)
 
-          this.sectionTitle('Privacy')
+          Text('Privacy')
+            .fontSize(12)
+            .fontWeight(FontWeight.Medium)
+            .fontColor(Theme.of(this.isDark).textDim)
+            .width('100%')
+            .padding({ left: 4, top: 18, bottom: 8 })
           Column() {
-            this.actionRow('Clear browsing history', Theme.of(this.isDark).text, (): void => {
+            Row() {
+              Text('Clear browsing history')
+                .fontSize(15)
+                .fontColor(Theme.of(this.isDark).text)
+                .layoutWeight(1)
+            }
+            .width('100%')
+            .padding({ left: 14, right: 14, top: 13, bottom: 13 })
+            .onClick(() => {
               BrowserStore.clearHistory().then(() => {
                 this.onToast('History cleared');
               });
             })
-            this.actionRow('Clear cookies', Theme.of(this.isDark).text, (): void => {
+            Row() {
+              Text('Clear cookies')
+                .fontSize(15)
+                .fontColor(Theme.of(this.isDark).text)
+                .layoutWeight(1)
+            }
+            .width('100%')
+            .padding({ left: 14, right: 14, top: 13, bottom: 13 })
+            .onClick(() => {
               try {
                 webview.WebCookieManager.clearAllCookiesSync();
                 this.onToast('Cookies cleared');
@@ -293,7 +304,15 @@ export struct SettingsView {
                 Logger.warn('clear cookies: ' + (err as BusinessError).message);
               }
             })
-            this.actionRow('Clear cache and site data', Theme.of(this.isDark).danger, (): void => {
+            Row() {
+              Text('Clear cache and site data')
+                .fontSize(15)
+                .fontColor(Theme.of(this.isDark).danger)
+                .layoutWeight(1)
+            }
+            .width('100%')
+            .padding({ left: 14, right: 14, top: 13, bottom: 13 })
+            .onClick(() => {
               try {
                 webview.WebviewController.removeAllCache(true);
                 webview.WebStorage.deleteAllData();
@@ -307,7 +326,12 @@ export struct SettingsView {
           .backgroundColor(Theme.of(this.isDark).surface)
           .borderRadius(14)
 
-          this.sectionTitle('About')
+          Text('About')
+            .fontSize(12)
+            .fontWeight(FontWeight.Medium)
+            .fontColor(Theme.of(this.isDark).textDim)
+            .width('100%')
+            .padding({ left: 4, top: 18, bottom: 8 })
           Column({ space: 6 }) {
             Text('Oniro Browser 1.0')
               .fontSize(14)

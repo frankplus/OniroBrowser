@@ -12,7 +12,7 @@ import { BusinessError } from '@kit.BasicServicesKit';
 import { BrowserTab } from '../model/BrowserTab';
 import { DialogKind, DialogRequest } from '../model/DialogRequest';
 import { SettingsKeys } from '../model/Settings';
-import { Theme, Palette } from '../common/Theme';
+import { Theme } from '../common/Theme';
 import { UrlUtils } from '../common/UrlUtils';
 import { Logger } from '../common/Logger';
 
@@ -324,7 +324,7 @@ export struct WebTabView {
       }
 
       if (this.tab.errorText.length > 0) {
-        this.errorCard(Theme.of(this.isDark))
+        this.errorCard()
       }
     }
     .width('100%')
@@ -332,27 +332,27 @@ export struct WebTabView {
   }
 
   @Builder
-  errorCard(palette: Palette) {
+  errorCard() {
     Column({ space: 14 }) {
       Text('⚠')
         .fontSize(40)
-        .fontColor(palette.textDim)
+        .fontColor(Theme.of(this.isDark).textDim)
       Text('This page could not be loaded')
         .fontSize(17)
         .fontWeight(FontWeight.Medium)
-        .fontColor(palette.text)
+        .fontColor(Theme.of(this.isDark).text)
       Text(UrlUtils.pretty(this.tab.url))
         .fontSize(13)
-        .fontColor(palette.textDim)
+        .fontColor(Theme.of(this.isDark).textDim)
         .maxLines(2)
         .textOverflow({ overflow: TextOverflow.Ellipsis })
       Text(this.tab.errorText)
         .fontSize(12)
-        .fontColor(palette.textDim)
+        .fontColor(Theme.of(this.isDark).textDim)
         .maxLines(3)
         .textAlign(TextAlign.Center)
       Button('Try again')
-        .backgroundColor(palette.accent)
+        .backgroundColor(Theme.of(this.isDark).accent)
         .fontColor('#FFFFFF')
         .height(38)
         .onClick(() => {
@@ -364,7 +364,7 @@ export struct WebTabView {
     .height('100%')
     .padding(28)
     .justifyContent(FlexAlign.Center)
-    .backgroundColor(palette.bg)
+    .backgroundColor(Theme.of(this.isDark).bg)
   }
 
   static describeResources(resources: Array<string>): string {
