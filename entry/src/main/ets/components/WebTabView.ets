@@ -14,10 +14,8 @@ import { DialogKind, DialogRequest } from '../model/DialogRequest';
 import { SettingsKeys } from '../model/Settings';
 import { Theme } from '../common/Theme';
 import { UrlUtils } from '../common/UrlUtils';
+import { UserAgent } from '../common/UserAgent';
 import { Logger } from '../common/Logger';
-
-const DESKTOP_UA: string =
-  'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36';
 
 @Component
 export struct WebTabView {
@@ -60,7 +58,7 @@ export struct WebTabView {
       return;
     }
     try {
-      this.tab.controller.setCustomUserAgent(this.desktopMode ? DESKTOP_UA : webview.WebviewController.getDefaultUserAgent());
+      this.tab.controller.setCustomUserAgent(this.desktopMode ? UserAgent.DESKTOP : UserAgent.mobile());
       this.tab.reload();
     } catch (err) {
       Logger.warn('user agent switch failed: ' + (err as BusinessError).message);
@@ -107,9 +105,7 @@ export struct WebTabView {
     const tab: BrowserTab = this.tab;
     tab.attached = true;
     try {
-      if (this.desktopMode) {
-        tab.controller.setCustomUserAgent(DESKTOP_UA);
-      }
+      tab.controller.setCustomUserAgent(this.desktopMode ? UserAgent.DESKTOP : UserAgent.mobile());
       tab.controller.setDownloadDelegate(this.downloadDelegate);
     } catch (err) {
       Logger.warn('controller setup: ' + (err as BusinessError).message);

@@ -116,7 +116,7 @@ export class SpeedDialItem {
 }
 
 export const DEFAULT_SPEED_DIAL: SpeedDialItem[] = [
-  new SpeedDialItem('Oniro', 'https://eclipse-oniro.org', 'O', '#2F6FED'),
+  new SpeedDialItem('Oniro', 'https://oniroproject.org', 'O', '#2F6FED'),
   new SpeedDialItem('OpenHarmony', 'https://www.openharmony.cn', 'H', '#0A59F7'),
   new SpeedDialItem('Wikipedia', 'https://en.wikipedia.org', 'W', '#4B5563'),
   new SpeedDialItem('DuckDuckGo', 'https://duckduckgo.com', 'D', '#DE5833'),

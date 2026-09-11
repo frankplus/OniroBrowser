@@ -30,7 +30,7 @@ entry/src/main/ets/
 │   ├── ListViews.ets               history and bookmarks
 │   ├── SettingsView.ets            settings surface
 │   └── Overlays.ets                menu, dialogs, find bar, suggestions, toast, link menu
-└── common/                         types, theme, URL handling, formatting, logging
+└── common/                         types, theme, URL handling, user agent, formatting, logging
 ```
 
 ## Features
@@ -51,13 +51,20 @@ entry/src/main/ets/
 * Background tabs sleep when they exceed the live-tab budget or when the system
   reports memory pressure, and reload on return.
 
-## Two platform notes
+## Three platform notes
 
 * **Never destroy a live `Web` component.** Tearing one down blocks the UI
   thread inside `libarkweb_engine.so` (`web_delegate.cpp NotifyDestory`) long
   enough for the ability watchdog to kill the app with `THREAD_BLOCK_6S`. Tabs
   therefore sleep by calling `terminateRenderProcess()` and keeping the
   component, and a tab being closed has its renderer terminated first.
+* **ArkWeb's stock user agent is unrecognisable to sites.** It reads
+  `Mozilla/5.0 (Phone; OpenHarmony 6.1) … Safari/537.36 ArkWeb/6.1.0.32
+  Mobile`: no `Linux` platform token, and the mobile marker after the engine
+  token instead of `Chrome/<v> Mobile Safari/537.36`. Sniffers then serve their
+  oldest fallback — google.com answers with its WAP-era "tier 3" page.
+  `common/UserAgent.ets` reshapes the engine's own string into the
+  Chrome-on-mobile order, keeping the real OS and engine versions.
 * **`about:blank` is not a home page.** Page callbacks fire for it during
   engine setup, so the shell ignores those events instead of switching to the
   start page.

@@ -9,6 +9,7 @@ import { BrowserStore } from '../model/BrowserStore';
 import { Settings, SettingsKeys } from '../model/Settings';
 import { Theme } from '../common/Theme';
 import { Logger } from '../common/Logger';
+import { UserAgent } from '../common/UserAgent';
 import { OverlayHeader } from './Chrome';
 
 @Component
@@ -27,11 +28,7 @@ export struct SettingsView {
   onToast: (message: string) => void = () => {};
 
   aboutToAppear(): void {
-    try {
-      this.userAgent = webview.WebviewController.getDefaultUserAgent();
-    } catch (err) {
-      Logger.warn('user agent unavailable: ' + (err as BusinessError).message);
-    }
+    this.userAgent = this.desktopMode ? UserAgent.DESKTOP : UserAgent.mobile();
   }
 
   build() {
