@@ -1,0 +1,28 @@
+{
+  "string": [
+    {
+      "name": "module_desc",
+      "value": "Oniro Browser entry module"
+    },
+    {
+      "name": "EntryAbility_desc",
+      "value": "Multi-tab web browser built on ArkWeb"
+    },
+    {
+      "name": "EntryAbility_label",
+      "value": "Browser"
+    },
+    {
+      "name": "reason_location",
+      "value": "Lets websites you allow use your location"
+    },
+    {
+      "name": "reason_camera",
+      "value": "Lets websites you allow use the camera"
+    },
+    {
+      "name": "reason_microphone",
+      "value": "Lets websites you allow use the microphone"
+    }
+  ]
+}
