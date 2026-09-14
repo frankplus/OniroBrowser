@@ -84,4 +84,5 @@ Logs: `hdc shell "hilog -x -T OniroBrowser"`.
 
 Apache License 2.0 — the full text is in [LICENSE](LICENSE). Every file the
 project wrote carries an `SPDX-License-Identifier: Apache-2.0` header; the few
-without one are unmodified project-template scaffold.
+without one are unmodified project-template scaffold. [NOTICE](NOTICE) records
+the declared licence and the third-party content this repository bundles.

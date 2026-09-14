@@ -1,0 +1,35 @@
+# Notices for Eclipse Oniro for OpenHarmony
+
+This content is produced and maintained by the Eclipse Oniro for OpenHarmony
+project (Oniro Browser, an ArkTS browser on the system ArkWeb engine).
+
+## Source Code
+
+The project maintains the following source code repository for this content:
+
+* https://github.com/frankplus/OniroBrowser
+
+## Copyright
+
+All content is the property of the respective authors or their employers. For
+more information regarding authorship of content, please consult the listed
+source code repository logs.
+
+## Declared Project License
+
+This program and the accompanying materials are made available under the terms
+of the Apache License, Version 2.0, which is available at
+https://www.apache.org/licenses/LICENSE-2.0.
+
+    SPDX-License-Identifier: Apache-2.0
+
+## Third-party Content
+
+This repository bundles the following third-party content. Their licenses
+govern those files, not the project's declared Apache-2.0 license.
+
+Material Design icons
+* Files: entry/src/main/resources/base/media/ic_*.svg (20 icons, redrawn as
+  single-path 24x24 SVGs; the path geometry is Google's)
+* License: Apache-2.0
+* Project: https://github.com/google/material-design-icons
