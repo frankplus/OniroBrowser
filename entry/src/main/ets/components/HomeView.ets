@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2026 Eclipse Oniro Project
+ * Copyright (c) 2026 Eclipse Oniro for OpenHarmony contributors.
  * SPDX-License-Identifier: Apache-2.0
  *
  * The new-tab surface: speed dial plus the most visited sites.

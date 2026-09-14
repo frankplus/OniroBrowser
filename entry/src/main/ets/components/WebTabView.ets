@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2026 Eclipse Oniro Project
+ * Copyright (c) 2026 Eclipse Oniro for OpenHarmony contributors.
  * SPDX-License-Identifier: Apache-2.0
  *
  * Renders the Web component of one tab and maps every engine callback onto

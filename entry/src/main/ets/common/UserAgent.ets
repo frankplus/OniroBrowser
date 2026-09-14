@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2026 Eclipse Oniro Project
+ * Copyright (c) 2026 Eclipse Oniro for OpenHarmony contributors.
  * SPDX-License-Identifier: Apache-2.0
  *
  * ArkWeb's stock user agent is shaped unlike any mainstream browser:

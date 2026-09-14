@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2026 Eclipse Oniro Project
+ * Copyright (c) 2026 Eclipse Oniro for OpenHarmony contributors.
  * SPDX-License-Identifier: Apache-2.0
  *
  * Decides where a web download is written and how it reaches somewhere the
