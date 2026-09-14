@@ -23,6 +23,7 @@ import {
   SuggestionKind
 } from '../common/Types';
 import { Theme } from '../common/Theme';
+import { DownloadTarget } from '../common/Downloads';
 import { UrlUtils } from '../common/UrlUtils';
 import { Logger } from '../common/Logger';
 import { BottomBar, OMNIBOX_ID, TopBar } from '../components/Chrome';
@@ -31,7 +32,7 @@ import { HomeView } from '../components/HomeView';
 import { TabSwitcher } from '../components/TabSwitcher';
 import { BookmarksView, HistoryView } from '../components/ListViews';
 import { SettingsView } from '../components/SettingsView';
-import { DialogHost, FindBar, LinkMenu, MenuSheet, SuggestionList, Toast } from '../components/Overlays';
+import { DialogHost, FindBar, LinkMenu, MenuSheet, SaveToGalleryBar, SuggestionList, Toast } from '../components/Overlays';
 
 @Entry
 @Component
@@ -45,6 +46,7 @@ struct Index {
   @State suggestions: Suggestion[] = [];
   @State dialog: DialogRequest | undefined = undefined;
   @State toastMessage: string = '';
+  @State pendingGallerySave: DownloadTarget | undefined = undefined;
   @State findVisible: boolean = false;
   @State bookmarked: boolean = false;
   @State linkMenuUrl: string = '';
@@ -560,6 +562,9 @@ struct Index {
                 onToast: (message: string): void => {
                   this.showToast(message);
                 },
+                onOfferGallerySave: (target: DownloadTarget): void => {
+                  this.pendingGallerySave = target;
+                },
                 onNewWindow: (targetUrl: string): webview.WebviewController => {
                   const popup: BrowserTab = new BrowserTab('');
                   popup.isHome = false;
@@ -780,6 +785,29 @@ struct Index {
             this.dialog = undefined;
           }
         })
+      }
+
+      // Held back while a sheet, dialog or the omnibox is up, so it never sits on top of one.
+      if (this.pendingGallerySave !== undefined && this.overlayKind === OverlayKind.NONE &&
+        this.dialog === undefined && !this.editing) {
+        Column() {
+          SaveToGalleryBar({
+            target: this.pendingGallerySave,
+            onDone: (message: string): void => {
+              this.pendingGallerySave = undefined;
+              this.showToast(message);
+            },
+            onDismiss: (): void => {
+              this.pendingGallerySave = undefined;
+            }
+          })
+        }
+        .width('100%')
+        .height('100%')
+        .justifyContent(FlexAlign.End)
+        .padding({ left: 12, right: 12, bottom: 78 })
+        // Only the bar itself should take taps; the page stays usable behind it.
+        .hitTestBehavior(HitTestMode.None)
       }
 
       if (this.toastMessage.length > 0) {

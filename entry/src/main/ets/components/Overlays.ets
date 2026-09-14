@@ -11,6 +11,7 @@ import { DialogKind, DialogRequest } from '../model/DialogRequest';
 import { SettingsKeys } from '../model/Settings';
 import { Metrics, Theme } from '../common/Theme';
 import { BrowserTab } from '../model/BrowserTab';
+import { DownloadKind, Downloads, DownloadTarget } from '../common/Downloads';
 
 @Component
 export struct MenuSheet {
@@ -433,5 +434,69 @@ export struct Toast {
     .width('100%')
     .justifyContent(FlexAlign.Center)
     .alignItems(HorizontalAlign.Center)
+  }
+}
+
+/**
+ * Offers a freshly downloaded picture or video to the gallery. The SaveButton
+ * is a security component: the system draws it and only a real tap on it grants
+ * the app the short-lived permission that lets the media library accept the
+ * file, so this cannot be replaced with an ordinary Button.
+ */
+@Component
+export struct SaveToGalleryBar {
+  @StorageProp(SettingsKeys.IS_DARK) isDark: boolean = false;
+  @Prop target: DownloadTarget;
+  @State private busy: boolean = false;
+  onDone: (message: string) => void = () => {};
+  onDismiss: () => void = () => {};
+
+  build() {
+    Row({ space: 12 }) {
+      Column({ space: 2 }) {
+        Text(this.target.kind === DownloadKind.VIDEO ? 'Video downloaded' : 'Picture downloaded')
+          .fontSize(13)
+          .fontColor(Theme.of(this.isDark).text)
+        Text(this.target.name)
+          .fontSize(11)
+          .fontColor(Theme.of(this.isDark).textDim)
+          .maxLines(1)
+          .textOverflow({ overflow: TextOverflow.Ellipsis })
+      }
+      .layoutWeight(1)
+      .alignItems(HorizontalAlign.Start)
+
+      SaveButton({ icon: SaveIconStyle.FULL_FILLED, text: SaveDescription.SAVE_TO_GALLERY,
+        buttonType: ButtonType.Capsule })
+        .enabled(!this.busy)
+        .onClick((event: ClickEvent, result: SaveButtonOnClickResult) => {
+          if (this.busy) {
+            return;
+          }
+          if (result !== SaveButtonOnClickResult.SUCCESS) {
+            this.onDone('Could not get permission to save');
+            return;
+          }
+          this.busy = true;
+          Downloads.saveToGallery(this.target.path).then((saved: boolean) => {
+            this.busy = false;
+            this.onDone(saved ? 'Saved to Gallery' : 'Could not save to Gallery');
+          }).catch(() => {
+            this.busy = false;
+            this.onDone('Could not save to Gallery');
+          });
+        })
+
+      Text('✕')
+        .fontSize(16)
+        .fontColor(Theme.of(this.isDark).textDim)
+        .padding(6)
+        .onClick(() => this.onDismiss())
+    }
+    .width('100%')
+    .padding({ left: 14, right: 10, top: 10, bottom: 10 })
+    .backgroundColor(Theme.of(this.isDark).surface)
+    .borderRadius(Metrics.RADIUS)
+    .shadow({ radius: 12, color: '#33000000', offsetY: 2 })
   }
 }

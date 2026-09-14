@@ -7,6 +7,7 @@ import { window } from '@kit.ArkUI';
 import { webview } from '@kit.ArkWeb';
 import { BusinessError } from '@kit.BasicServicesKit';
 import { BrowserStore } from '../model/BrowserStore';
+import { Downloads } from '../common/Downloads';
 import { Settings } from '../model/Settings';
 import { Logger } from '../common/Logger';
 
@@ -32,6 +33,11 @@ export default class EntryAbility extends UIAbility {
       .catch((err: BusinessError) => {
         Logger.error('data init failed: ' + err.message);
       });
+
+    // Move what an earlier run had to leave behind, and drop stale staged files.
+    Downloads.sweepPending().catch((err: BusinessError) => {
+      Logger.warn('download sweep failed: ' + err.message);
+    });
 
     this.takeUrlFromWant(want);
   }

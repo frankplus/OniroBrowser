@@ -17,6 +17,10 @@
       "value": "Lets websites you allow use your location"
     },
     {
+      "name": "reason_downloads",
+      "value": "Lets the browser save downloads to your Downloads folder"
+    },
+    {
       "name": "reason_camera",
       "value": "Lets websites you allow use the camera"
     },

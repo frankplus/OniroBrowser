@@ -7,12 +7,12 @@
  */
 import { webview } from '@kit.ArkWeb';
 import { abilityAccessCtrl, common, PermissionRequestResult, Permissions } from '@kit.AbilityKit';
-import { fileIo } from '@kit.CoreFileKit';
 import { BusinessError } from '@kit.BasicServicesKit';
 import { BrowserTab } from '../model/BrowserTab';
 import { DialogKind, DialogRequest } from '../model/DialogRequest';
 import { SettingsKeys } from '../model/Settings';
 import { Theme } from '../common/Theme';
+import { Downloads, DownloadTarget } from '../common/Downloads';
 import { UrlUtils } from '../common/UrlUtils';
 import { UserAgent } from '../common/UserAgent';
 import { Logger } from '../common/Logger';
@@ -32,6 +32,7 @@ export struct WebTabView {
   onWindowExit: (tabId: number) => void = () => {};
   onActivateRequest: (tabId: number) => void = () => {};
   onLinkMenu: (linkUrl: string) => void = () => {};
+  onOfferGallerySave: (target: DownloadTarget) => void = () => {};
   private downloadDelegate: webview.WebDownloadDelegate = new webview.WebDownloadDelegate();
 
   aboutToAppear(): void {
@@ -65,36 +66,30 @@ export struct WebTabView {
     }
   }
 
-  private downloadDir(): string {
-    const context = AppStorage.get<common.UIAbilityContext>('abilityContext');
-    if (context === undefined) {
-      return '';
-    }
-    const dir: string = context.filesDir + '/downloads';
-    try {
-      if (!fileIo.accessSync(dir)) {
-        fileIo.mkdirSync(dir);
-      }
-    } catch (err) {
-      Logger.warn('download dir: ' + (err as BusinessError).message);
-    }
-    return dir;
-  }
-
   private setupDownloads(): void {
     this.downloadDelegate.onBeforeDownload((item: webview.WebDownloadItem) => {
-      const dir: string = this.downloadDir();
+      const suggested: string = item.getSuggestedFileName();
+      const name: string = Downloads.safeName(
+        suggested.length > 0 ? suggested : UrlUtils.fileNameOf(item.getUrl(), 'download.bin'), 'download.bin');
+      const dir: string = Downloads.targetDir(Downloads.kindOf(name));
       if (dir.length === 0) {
         item.cancel();
+        this.onToast('Download failed: nowhere to put the file');
         return;
       }
-      const name: string = UrlUtils.fileNameOf(item.getSuggestedFileName(), 'download.bin');
-      const target: string = dir + '/' + name;
-      item.start(target);
+      item.start(Downloads.uniquePath(dir, name));
       this.onToast('Downloading ' + name);
     });
     this.downloadDelegate.onDownloadFinish((item: webview.WebDownloadItem) => {
-      this.onToast('Saved ' + UrlUtils.fileNameOf(item.getSuggestedFileName(), 'file') + ' to app files/downloads');
+      const target: DownloadTarget = Downloads.settle(item.getFullPath());
+      if (target.needsGallerySave) {
+        // A normal app can only reach the media library through a SaveButton tap.
+        this.onOfferGallerySave(target);
+      } else if (target.isPublic) {
+        this.onToast('Saved ' + target.name + ' to Downloads');
+      } else {
+        this.onToast('Saved ' + target.name + ' to the browser\'s files');
+      }
     });
     this.downloadDelegate.onDownloadFailed((item: webview.WebDownloadItem) => {
       this.onToast('Download failed (' + item.getLastErrorCode() + ')');
