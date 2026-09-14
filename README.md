@@ -79,3 +79,9 @@ oniro-app app launch
 ```
 
 Logs: `hdc shell "hilog -x -T OniroBrowser"`.
+
+## License
+
+Apache License 2.0 — the full text is in [LICENSE](LICENSE). Every file the
+project wrote carries an `SPDX-License-Identifier: Apache-2.0` header; the few
+without one are unmodified project-template scaffold.
